@@ -12,6 +12,7 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -55,6 +56,7 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">TACSProblem</span>
 <span class="kn">import</span> <span class="nn">tacs.TACS</span>
+<span class="kn">import</span> <span class="nn">tacs.functions</span>
 
 
 <div class="viewcode-block" id="TransientProblem"><a class="viewcode-back" href="../../../pytacs/transient.html#tacs.problems.TransientProblem">[docs]</a><span class="k">class</span> <span class="nc">TransientProblem</span><span class="p">(</span><span class="n">TACSProblem</span><span class="p">):</span>
@@ -493,7 +495,7 @@
 
 <div class="viewcode-block" id="TransientProblem.addInertialLoad"><a class="viewcode-back" href="../../../pytacs/transient.html#tacs.problems.TransientProblem.addInertialLoad">[docs]</a>    <span class="k">def</span> <span class="nf">addInertialLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="n">inertiaVector</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is used to add a fixed inertial load  at a specified time step</span>
+<span class="sd">        This method is used to add a fixed inertial load at a specified time step</span>
 <span class="sd">        due to a uniform acceleration over the entire model.</span>
 <span class="sd">        This is most commonly used to model gravity loads on a model.</span>
 
@@ -507,6 +509,26 @@
 <span class="sd">            Acceleration vector used to define inertial load.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_addInertialLoad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auxElems</span><span class="p">[</span><span class="n">timeStep</span><span class="p">],</span> <span class="n">inertiaVector</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransientProblem.addCentrifugalLoad"><a class="viewcode-back" href="../../../pytacs/transient.html#tacs.problems.TransientProblem.addCentrifugalLoad">[docs]</a>    <span class="k">def</span> <span class="nf">addCentrifugalLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="n">omegaVector</span><span class="p">,</span> <span class="n">rotCenter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is used to add a fixed centrifugal load at at specified time step</span>
+<span class="sd">        due to a uniform rotational velocity over the entire model.</span>
+<span class="sd">        This is most commonly used to model rotors, rolling aircraft, etc.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        timeStep : int</span>
+<span class="sd">            Time step index to apply load to.</span>
+
+<span class="sd">        omegaVector : numpy.ndarray</span>
+<span class="sd">            Rotational velocity vector (rad/s) used to define centrifugal load.</span>
+
+<span class="sd">        rotCenter : numpy.ndarray</span>
+<span class="sd">            Location of center of rotation used to define centrifugal load.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_addCentrifugalLoad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auxElems</span><span class="p">[</span><span class="n">timeStep</span><span class="p">],</span> <span class="n">omegaVector</span><span class="p">,</span> <span class="n">rotCenter</span><span class="p">)</span></div>
 
     <span class="c1">####### Transient solver methods ########</span>
 
@@ -605,6 +627,37 @@
         <span class="k">return</span></div>
 
     <span class="c1">####### Function eval/sensitivity methods ########</span>
+
+<div class="viewcode-block" id="TransientProblem.addFunction"><a class="viewcode-back" href="../../../pytacs/transient.html#tacs.problems.TransientProblem.addFunction">[docs]</a>    <span class="k">def</span> <span class="nf">addFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcName</span><span class="p">,</span> <span class="n">funcHandle</span><span class="p">,</span> <span class="n">compIDs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generic method to add a function for TACS. It is intended to</span>
+<span class="sd">        be reasonably generic since the user supplies the actual</span>
+<span class="sd">        function handle to use. See the :py:mod:`~tacs.functions` module</span>
+<span class="sd">        for supported TACS eval functions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        funcName : str</span>
+<span class="sd">            The user-supplied name for the function. This will</span>
+<span class="sd">            typically be a string that is meaningful to the user</span>
+
+<span class="sd">        funcHandle : TACS.Function</span>
+<span class="sd">            The function handle to use for creation. This must come</span>
+<span class="sd">            from the functions module in tacs.</span>
+
+<span class="sd">        compIDs: list</span>
+<span class="sd">            List of compIDs to select.</span>
+
+<span class="sd">        **kwargs:</span>
+<span class="sd">            Any keyword arguments to be passed to the TACS function during setup.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Warn the users if these functions are attempted to be passed.</span>
+        <span class="k">if</span> <span class="n">funcHandle</span> <span class="ow">in</span> <span class="p">[</span><span class="n">tacs</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">MomentOfInertia</span><span class="p">,</span> <span class="n">tacs</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">CenterOfMass</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_TACSWarning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">funcHandle</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not supported for </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> problem types&quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot; and may not give consistent results.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">TACSProblem</span><span class="o">.</span><span class="n">addFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcName</span><span class="p">,</span> <span class="n">funcHandle</span><span class="p">,</span> <span class="n">compIDs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TransientProblem.evalFunctions"><a class="viewcode-back" href="../../../pytacs/transient.html#tacs.problems.TransientProblem.evalFunctions">[docs]</a>    <span class="k">def</span> <span class="nf">evalFunctions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">evalFuncs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">ignoreMissing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -908,7 +961,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>

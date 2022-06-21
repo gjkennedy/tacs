@@ -12,6 +12,7 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -245,23 +246,24 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generic method to add a function for TACS. It is intended to</span>
 <span class="sd">        be reasonably generic since the user supplies the actual</span>
-<span class="sd">        function handle to use. The following functions can be used:</span>
-<span class="sd">        KSFailure, KSTemperature, AverageTemperature, Compliance,</span>
-<span class="sd">        KSDisplacement, StructuralMass, HeatFlux.</span>
+<span class="sd">        function handle to use. See the :py:mod:`~tacs.functions` module</span>
+<span class="sd">        for supported TACS eval functions.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        funcName : str</span>
 <span class="sd">            The user-supplied name for the function. This will</span>
-<span class="sd">            typically be a string that is meanful to the user</span>
+<span class="sd">            typically be a string that is meaningful to the user</span>
 
-<span class="sd">        funcHandle : tacs.functions</span>
-<span class="sd">            The fucntion handle to use for creation. This must come</span>
+<span class="sd">        funcHandle : TACS.Function</span>
+<span class="sd">            The function handle to use for creation. This must come</span>
 <span class="sd">            from the functions module in tacs.</span>
 
 <span class="sd">        compIDs: list</span>
-<span class="sd">            List of compIDs to select. Use pyTACS.selectCompIDs method</span>
-<span class="sd">            to determine this.</span>
+<span class="sd">            List of compIDs to select.</span>
+
+<span class="sd">        **kwargs:</span>
+<span class="sd">            Any keyword arguments to be passed to the TACS function during setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">success</span> <span class="o">=</span> <span class="n">TACSProblem</span><span class="o">.</span><span class="n">addFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcName</span><span class="p">,</span> <span class="n">funcHandle</span><span class="p">,</span> <span class="n">compIDs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
@@ -528,6 +530,23 @@
 <span class="sd">            Acceleration vector used to define inertial load.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_addInertialLoad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auxElems</span><span class="p">,</span> <span class="n">inertiaVector</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StaticProblem.addCentrifugalLoad"><a class="viewcode-back" href="../../../pytacs/static.html#tacs.problems.StaticProblem.addCentrifugalLoad">[docs]</a>    <span class="k">def</span> <span class="nf">addCentrifugalLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omegaVector</span><span class="p">,</span> <span class="n">rotCenter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is used to add a fixed centrifugal load due to a</span>
+<span class="sd">        uniform rotational velocity over the entire model.</span>
+<span class="sd">        This is most commonly used to model rotors, rolling aircraft, etc.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        omegaVector : numpy.ndarray</span>
+<span class="sd">            Rotational velocity vector (rad/s) used to define centrifugal load.</span>
+
+<span class="sd">        rotCenter : numpy.ndarray</span>
+<span class="sd">            Location of center of rotation used to define centrifugal load.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_addCentrifugalLoad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auxElems</span><span class="p">,</span> <span class="n">omegaVector</span><span class="p">,</span> <span class="n">rotCenter</span><span class="p">)</span></div>
 
     <span class="c1">####### Static solver methods ########</span>
 
@@ -1285,7 +1304,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
