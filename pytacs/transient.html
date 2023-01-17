@@ -80,6 +80,11 @@ The following options their default values and descriptions are listed below:</p
 	 Absolute convergence tolerance for integrator based on l2 norm of residual.
 &#39;L2ConvergenceRel&#39;: 1e-12
 	 Relative convergence tolerance for integrator based on l2 norm of residual.
+&#39;RBEStiffnessScaleFactor&#39;: 1000.0
+	 Constraint matrix scaling factor used in RBE Lagrange multiplier stiffness matrix.
+&#39;RBEArtificialStiffness&#39;: 0.001
+	 Artificial constant added to diagonals of RBE Lagrange multiplier stiffness matrix 
+	 to stabilize preconditioner.
 &#39;jacAssemblyFreq&#39;: 1
 	 How frequently to reassemble Jacobian during time integration process.
 &#39;writeSolution&#39;: True
@@ -136,7 +141,7 @@ Use pyTACS.createTransientProblem instead.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="tacs.problems.TransientProblem.getNumTimeSteps">
 <span class="sig-name descname"><span class="pre">getNumTimeSteps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/transient.html#TransientProblem.getNumTimeSteps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.TransientProblem.getNumTimeSteps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the number of timesteps used in time integration for this problem.</p>
+<dd><p>Get the number of time steps used in time integration for this problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>numSteps</strong> -- Number of time steps.</p>
@@ -195,8 +200,7 @@ Use pyTACS.createTransientProblem instead.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="tacs.problems.TransientProblem.addLoadToComponents">
 <span class="sig-name descname"><span class="pre">addLoadToComponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compIDs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">averageLoad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/transient.html#TransientProblem.addLoadToComponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.TransientProblem.addLoadToComponents" title="Permalink to this definition">¶</a></dt>
-<dd><p>&quot;
-This method is used to add a <em>FIXED TOTAL LOAD</em> on one or more
+<dd><p>This method is used to add a <em>FIXED TOTAL LOAD</em> on one or more
 components, defined by COMPIDs, at a specific time instance.
 The purpose of this routine is to add loads that remain fixed throughout
 an optimization. An example would be an engine load. This routine determines
@@ -263,7 +267,7 @@ or NASTRAN (grid IDs in bdf file) ordering</p></li>
 </dl>
 <p class="rubric">Notes</p>
 <p>The units of the entries of the 'force' vector F are not
-necesarily physical forces and their interpretation depends
+necessarily physical forces and their interpretation depends
 on the physics problem being solved and the dofs included
 in the model.</p>
 <p>A couple of examples of force vector components for common problem are listed below:</p>
@@ -286,8 +290,7 @@ in the model.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="tacs.problems.TransientProblem.addLoadToRHS">
 <span class="sig-name descname"><span class="pre">addLoadToRHS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Fapplied</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/transient.html#TransientProblem.addLoadToRHS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.TransientProblem.addLoadToRHS" title="Permalink to this definition">¶</a></dt>
-<dd><p>&quot;
-This method is used to add a <em>FIXED TOTAL LOAD</em> directly to the
+<dd><p>This method is used to add a <em>FIXED TOTAL LOAD</em> directly to the
 right hand side vector given the equation below:</p>
 <blockquote>
 <div><p>M*udotdot + K*u = f</p>
@@ -620,20 +623,26 @@ respect to all design variables and node locations are computed.</p>
 <li><p><strong>timeStep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) -- Time step index to get state variables for.</p></li>
 <li><p><strong>timeStage</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em> or </em><em>None</em>) -- Time stage index to get state variables for.</p></li>
 <li><p><strong>states</strong> (<em>TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> or </em><em>None</em>) -- If states is not None, place the state variables into this array (optional).</p></li>
-<li><p><strong>dstates</strong> (<em>TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> or </em><em>None</em>) -- If dstates is not None, place the time derivitive of the state variables into this array (optional).</p></li>
-<li><p><strong>ddstates</strong> (<em>TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> or </em><em>None</em>) -- If ddstates is not None, place the second time derivitive of the state variables into this array (optional).</p></li>
+<li><p><strong>dstates</strong> (<em>TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> or </em><em>None</em>) -- If dstates is not None, place the time derivative of the state variables into this array (optional).</p></li>
+<li><p><strong>ddstates</strong> (<em>TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> or </em><em>None</em>) -- If ddstates is not None, place the second time derivative of the state variables into this array (optional).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>time</strong> (<em>float</em>) -- The time at specified time instance</p></li>
 <li><p><strong>states</strong> (<em>TACS.Vec or numpy.ndarray</em>) -- The state variables.</p></li>
-<li><p><strong>dstates</strong> (<em>TACS.Vec or numpy.ndarray or None</em>) -- The time derivitive of the state variables.</p></li>
-<li><p><strong>ddstates</strong> (<em>TACS.Vec or numpy.ndarray or None</em>) -- The second time derivitive of the state variables.</p></li>
+<li><p><strong>dstates</strong> (<em>TACS.Vec or numpy.ndarray or None</em>) -- The time derivative of the state variables.</p></li>
+<li><p><strong>ddstates</strong> (<em>TACS.Vec or numpy.ndarray or None</em>) -- The second time derivative of the state variables.</p></li>
 </ul>
 </p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tacs.problems.TransientProblem.zeroLoads">
+<span class="sig-name descname"><span class="pre">zeroLoads</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/transient.html#TransientProblem.zeroLoads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.TransientProblem.zeroLoads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zero all applied loads</p>
 </dd></dl>
 
 <dl class="py method">
@@ -651,7 +660,7 @@ determine the desired writing procedure</p>
 <li><p><strong>outputDir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>None</em>) -- Use the supplied output directory</p></li>
 <li><p><strong>baseName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>None</em>) -- Use this supplied string for the base filename. Typically
 only used from an external solver.</p></li>
-<li><p><strong>number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em> or </em><em>None</em>) -- Use the user spplied number to index solution. Again, only
+<li><p><strong>number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em> or </em><em>None</em>) -- Use the user supplied number to index solution. Again, only
 typically used from an external solver</p></li>
 <li><p><strong>timeSteps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>] or </em><em>None</em>) -- Time step index or indices to get state variables for.
 If None, returns a solution for all time steps.
@@ -690,7 +699,7 @@ Defaults to None.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="tacs.problems.TransientProblem.getNodes">
 <span class="sig-name descname"><span class="pre">getNodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tacs.problems.TransientProblem.getNodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the mesh coordiantes of this problem.</p>
+<dd><p>Return the mesh coordinates of this problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>coords</strong> -- Structural coordinate in array of size (N * 3) where N is
@@ -845,6 +854,7 @@ optimization</p>
 <li><a class="reference internal" href="#tacs.problems.TransientProblem.evalFunctions"><code class="docutils literal notranslate"><span class="pre">TransientProblem.evalFunctions()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.TransientProblem.evalFunctionsSens"><code class="docutils literal notranslate"><span class="pre">TransientProblem.evalFunctionsSens()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.TransientProblem.getVariables"><code class="docutils literal notranslate"><span class="pre">TransientProblem.getVariables()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.problems.TransientProblem.zeroLoads"><code class="docutils literal notranslate"><span class="pre">TransientProblem.zeroLoads()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.TransientProblem.writeSolution"><code class="docutils literal notranslate"><span class="pre">TransientProblem.writeSolution()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.TransientProblem.dtype"><code class="docutils literal notranslate"><span class="pre">TransientProblem.dtype</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.TransientProblem.getDesignVars"><code class="docutils literal notranslate"><span class="pre">TransientProblem.getDesignVars()</span></code></a></li>

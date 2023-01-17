@@ -67,6 +67,7 @@
 <span class="kn">import</span> <span class="nn">numbers</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
@@ -78,8 +79,38 @@
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
 
 
+<span class="c1"># Define decorator functions for methods that must be called before initialize</span>
+<span class="k">def</span> <span class="nf">preinitialize_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapped_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TACSError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">` is a pre-initialize method. &quot;</span>
+                <span class="s2">&quot;It may only be called before the &#39;initialize&#39; method has been called.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapped_method</span>
+
+
+<span class="c1"># Define decorator functions for methods that must be called after initialize</span>
+<span class="k">def</span> <span class="nf">postinitialize_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapped_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TACSError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">` is a post-initialize method. &quot;</span>
+                <span class="s2">&quot;It may only be called after the &#39;initialize&#39; method has been called.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapped_method</span>
+
+
 <div class="viewcode-block" id="pyTACS"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS">[docs]</a><span class="k">class</span> <span class="nc">pyTACS</span><span class="p">(</span><span class="n">BaseUI</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The class for working with a TACS structure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -135,6 +166,11 @@
             <span class="kc">True</span><span class="p">,</span>
             <span class="s2">&quot;Flag for whether to include element extra variables in f5 file.&quot;</span><span class="p">,</span>
         <span class="p">],</span>
+        <span class="s2">&quot;writeLoads&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="nb">bool</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Flag for whether to include external nodal loads in f5 file.&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
         <span class="s2">&quot;writeCoordinateFrame&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="nb">bool</span><span class="p">,</span>
             <span class="kc">False</span><span class="p">,</span>
@@ -153,7 +189,7 @@
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">comm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dvNum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scaleList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -231,6 +267,7 @@
 
         <span class="c1"># List of DV groups</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compIDBounds</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addedCompIDs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
@@ -273,8 +310,9 @@
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pp</span><span class="p">(</span><span class="s2">&quot;+--------------------------------------------------+&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="pyTACS.addGlobalDV"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.addGlobalDV">[docs]</a>    <span class="k">def</span> <span class="nf">addGlobalDV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descript</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.addGlobalDV"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.addGlobalDV">[docs]</a>    <span class="nd">@preinitialize_method</span>
+    <span class="k">def</span> <span class="nf">addGlobalDV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descript</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function allows adding design variables that are not</span>
 <span class="sd">        cleanly associated with a particular constitutive object. One</span>
 <span class="sd">        example is the pitch of the stiffeners for blade stiffened</span>
@@ -303,9 +341,136 @@
             <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
             <span class="s2">&quot;lowerBound&quot;</span><span class="p">:</span> <span class="n">lower</span><span class="p">,</span>
             <span class="s2">&quot;upperBound&quot;</span><span class="p">:</span> <span class="n">upper</span><span class="p">,</span>
+            <span class="s2">&quot;isMassDV&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dvNum</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scaleList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pyTACS.getGlobalDVs"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getGlobalDVs">[docs]</a>    <span class="k">def</span> <span class="nf">getGlobalDVs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dict holding info about all current global DVs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        globalDVs : dict</span>
+<span class="sd">            Dictionary holding global dv information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="pyTACS.getGlobalDVKeys"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getGlobalDVKeys">[docs]</a>    <span class="k">def</span> <span class="nf">getGlobalDVKeys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get key names for all current global DVs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        globalDVKeys : list</span>
+<span class="sd">            List holding global dv names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="pyTACS.getGlobalDVNums"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getGlobalDVNums">[docs]</a>    <span class="k">def</span> <span class="nf">getGlobalDVNums</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the dv nums corresponding to global DVs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        globalDVNums : list</span>
+<span class="sd">            List holding dv nums corresponding to global DVs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span><span class="p">[</span><span class="n">descript</span><span class="p">][</span><span class="s2">&quot;num&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">descript</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="pyTACS.getTotalNumGlobalDVs"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getTotalNumGlobalDVs">[docs]</a>    <span class="k">def</span> <span class="nf">getTotalNumGlobalDVs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get total number of global DVs across all processors.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        globalDVs : dict</span>
+<span class="sd">            Dictionary holding global dv information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pyTACS.assignMassDV"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.assignMassDV">[docs]</a>    <span class="nd">@preinitialize_method</span>
+    <span class="k">def</span> <span class="nf">assignMassDV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descript</span><span class="p">,</span> <span class="n">eIDs</span><span class="p">,</span> <span class="n">dvName</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign a global DV to a point mass element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        descript : str</span>
+<span class="sd">            Global DV key to assign mass design variable to. If the key is does not exist,</span>
+<span class="sd">            it will automatically be created and added to global DVs.</span>
+
+<span class="sd">        eIDs : int or list</span>
+<span class="sd">            Element IDs of concentrated mass to assign DV to (NASTRAN ordering)</span>
+
+<span class="sd">        dvName : str</span>
+<span class="sd">            Name of mass property to apply DV to.</span>
+<span class="sd">            May be `m` for mass, `I11`, `I22`, `I12`, etc. for moment of inertia components.</span>
+<span class="sd">            Defaults to `m` (mass).</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Currently only CONM2 cards are supported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Make sure eID is an array</span>
+        <span class="n">eIDs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">eIDs</span><span class="p">)</span>
+
+        <span class="c1"># Check if referenced element ID is a CONM2 element</span>
+        <span class="k">for</span> <span class="n">eID</span> <span class="ow">in</span> <span class="n">eIDs</span><span class="p">:</span>
+            <span class="n">is_mass_element</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">eID</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bdfInfo</span><span class="o">.</span><span class="n">masses</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bdfInfo</span><span class="o">.</span><span class="n">masses</span><span class="p">[</span><span class="n">eID</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CONM2&quot;</span><span class="p">]:</span>
+                    <span class="n">is_mass_element</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_mass_element</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TACSError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Element ID &#39;</span><span class="si">{</span><span class="n">eID</span><span class="si">}</span><span class="s2">&#39; does not correspond to a `CONM2` element. &quot;</span>
+                    <span class="s2">&quot;Only `CONM2` elements are supported for this method.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Check if descript already exists in global dvs, if not add it</span>
+        <span class="k">if</span> <span class="n">descript</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addGlobalDV</span><span class="p">(</span><span class="n">descript</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">dv_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">globalDVs</span><span class="p">[</span><span class="n">descript</span><span class="p">]</span>
+
+        <span class="c1"># Flag this global dv as being a mass dv</span>
+        <span class="n">dv_dict</span><span class="p">[</span><span class="s2">&quot;isMassDV&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">massDV</span> <span class="o">=</span> <span class="n">dv_dict</span><span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">]</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">dv_dict</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+        <span class="n">ub</span> <span class="o">=</span> <span class="n">dv_dict</span><span class="p">[</span><span class="s2">&quot;upperBound&quot;</span><span class="p">]</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="n">dv_dict</span><span class="p">[</span><span class="s2">&quot;lowerBound&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">eID</span> <span class="ow">in</span> <span class="n">eIDs</span><span class="p">:</span>
+            <span class="c1"># If the element ID hasn&#39;t already been added to massDVs, add it</span>
+            <span class="k">if</span> <span class="n">eID</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="c1"># Update the element entry with the dv num</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dvName</span><span class="si">}</span><span class="s2">Num&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">massDV</span>
+
+            <span class="c1"># Update the element entry with the dv name</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">][</span><span class="n">dvName</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="c1"># If value was defined from previous call, remove it</span>
+            <span class="k">elif</span> <span class="n">dvName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">dvName</span><span class="p">)</span>
+
+            <span class="c1"># Update the element entry with the dv upper bound</span>
+            <span class="k">if</span> <span class="n">ub</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dvName</span><span class="si">}</span><span class="s2">ub&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ub</span>
+            <span class="c1"># If upper bound was defined from previous call, remove it</span>
+            <span class="k">elif</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dvName</span><span class="si">}</span><span class="s2">ub&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dvName</span><span class="si">}</span><span class="s2">ub&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Update the element entry with the dv lower bound</span>
+            <span class="k">if</span> <span class="n">lb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dvName</span><span class="si">}</span><span class="s2">lb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lb</span>
+            <span class="c1"># If lower bound was defined from previous call, remove it</span>
+            <span class="k">elif</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dvName</span><span class="si">}</span><span class="s2">lb&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span><span class="p">[</span><span class="n">eID</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dvName</span><span class="si">}</span><span class="s2">lb&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyTACS.selectCompIDs"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.selectCompIDs">[docs]</a>    <span class="k">def</span> <span class="nf">selectCompIDs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -318,7 +483,7 @@
         <span class="n">projectVector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the most important function of the entire setup</span>
 <span class="sd">        process. The basic idea is as follow: We have a list of nComp</span>
 <span class="sd">        which are the component descriptions. What we need is a way of</span>
@@ -382,7 +547,7 @@
 <span class="sd">           of which &#39;include&#39; components will be selected. This</span>
 <span class="sd">           functionality uses a geometric approach to select the compIDs.</span>
 <span class="sd">           All components within the project 2D convex hull are included.</span>
-<span class="sd">           Therefore it is essential to split up concave include regions</span>
+<span class="sd">           Therefore, it is essential to split up concave include regions</span>
 <span class="sd">           into smaller convex regions. Use multiple calls to selectCompIDs to</span>
 <span class="sd">           accumulate multiple regions.</span>
 
@@ -512,7 +677,7 @@
         <span class="k">return</span> <span class="n">compIDs</span></div>
 
 <div class="viewcode-block" id="pyTACS.getBDFInfo"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getBDFInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getBDFInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return pynastran bdf object. This object can be used interactively</span>
 <span class="sd">        to parse information (nodes, elements, loads etc) included in the bdf file.</span>
 
@@ -524,7 +689,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bdfInfo</span></div>
 
 <div class="viewcode-block" id="pyTACS.getCompNames"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getCompNames">[docs]</a>    <span class="k">def</span> <span class="nf">getCompNames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compIDs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a list of component descriptions for the given component</span>
 <span class="sd">        IDs. compIDs should come from a call to selectCompIDs</span>
 
@@ -556,7 +721,7 @@
         <span class="k">return</span> <span class="n">compDescripts</span></div>
 
 <div class="viewcode-block" id="pyTACS.getGlobalNodeIDsForComps"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getGlobalNodeIDsForComps">[docs]</a>    <span class="k">def</span> <span class="nf">getGlobalNodeIDsForComps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compIDs</span><span class="p">,</span> <span class="n">nastranOrdering</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return the global (non-partitioned) node IDs belonging to a given list of component IDs</span>
 
 <span class="sd">        Parameters</span>
@@ -574,17 +739,15 @@
 <span class="sd">        nodeIDs : list</span>
 <span class="sd">            List of unique nodeIDs that belong to the given list of compIDs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="c1"># Return all component ids</span>
         <span class="k">if</span> <span class="n">compIDs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">compIDs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nComp</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="o">.</span><span class="n">getGlobalNodeIDsForComps</span><span class="p">(</span><span class="n">compIDs</span><span class="p">,</span> <span class="n">nastranOrdering</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="pyTACS.getLocalNodeIDsForComps"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getLocalNodeIDsForComps">[docs]</a>    <span class="k">def</span> <span class="nf">getLocalNodeIDsForComps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compIDs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getLocalNodeIDsForComps"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getLocalNodeIDsForComps">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getLocalNodeIDsForComps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compIDs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return the local (partitioned) node IDs belonging to a given list of component IDs</span>
 
 <span class="sd">        Parameters</span>
@@ -598,9 +761,6 @@
 <span class="sd">        nodeIDs : list</span>
 <span class="sd">            List of unique nodeIDs that belong to the given list of compIDs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="c1"># Return all component ids</span>
         <span class="k">if</span> <span class="n">compIDs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">compIDs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nComp</span><span class="p">))</span>
@@ -608,7 +768,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="o">.</span><span class="n">getLocalNodeIDsForComps</span><span class="p">(</span><span class="n">compIDs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyTACS.initialize"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elemCallBack</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the &#39;last&#39; method to be called during the setup. The</span>
 <span class="sd">        user should have already added all the design variables,</span>
 <span class="sd">        domains ect. before this function is call. This function</span>
@@ -656,7 +816,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_createOutputGroups</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_createElements</span><span class="p">(</span><span class="n">elemCallBack</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="o">.</span><span class="n">createTACSAssembler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varsPerNode</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="o">.</span><span class="n">createTACSAssembler</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varsPerNode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">massDVs</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_createOutputViewer</span><span class="p">()</span>
 
@@ -669,7 +831,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">getDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_elemCallBackFromBDF</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Automatically setup elemCallBack using information contained in BDF file.</span>
 <span class="sd">        This function assumes all material properties are specified in the BDF.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1019,24 +1181,23 @@
 
         <span class="k">return</span> <span class="n">elemCallBack</span>
 
-<div class="viewcode-block" id="pyTACS.getOrigDesignVars"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getOrigDesignVars">[docs]</a>    <span class="k">def</span> <span class="nf">getOrigDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getOrigDesignVars"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getOrigDesignVars">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getOrigDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the original design variables that were specified with</span>
 <span class="sd">        during assembler creation.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x : array</span>
-<span class="sd">            The current design variable vector set in tacs.</span>
+<span class="sd">        x : numpy.array</span>
+<span class="sd">            The original design variable vector set in tacs.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.createDesignVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createDesignVec">[docs]</a>    <span class="k">def</span> <span class="nf">createDesignVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asBVec</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.createDesignVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createDesignVec">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">createDesignVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asBVec</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new tacs distributed design vector.</span>
 <span class="sd">        Values are initialized to zero.</span>
 
@@ -1052,36 +1213,30 @@
 <span class="sd">        x : numpy.ndarray or TACS.Vec</span>
 <span class="sd">            Distributed design variable vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="n">xVec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createDesignVec</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">asBVec</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">xVec</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">xVec</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.getNumDesignVars"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getNumDesignVars">[docs]</a>    <span class="k">def</span> <span class="nf">getNumDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getNumDesignVars"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getNumDesignVars">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getNumDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the number of design variables on this processor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.getTotalNumDesignVars"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getTotalNumDesignVars">[docs]</a>    <span class="k">def</span> <span class="nf">getTotalNumDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getTotalNumDesignVars"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getTotalNumDesignVars">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getTotalNumDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the number of design variables across all processors.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dvNum</span></div>
 
-<div class="viewcode-block" id="pyTACS.getOrigNodes"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getOrigNodes">[docs]</a>    <span class="k">def</span> <span class="nf">getOrigNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the original mesh coordiantes read in from the meshLoader.</span>
+<div class="viewcode-block" id="pyTACS.getOrigNodes"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getOrigNodes">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getOrigNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the original mesh coordinates read in from the meshLoader.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1089,13 +1244,11 @@
 <span class="sd">            Structural coordinate in array of size (N * 3) where N is</span>
 <span class="sd">            the number of structural nodes on this processor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xpts0</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.createNodeVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createNodeVec">[docs]</a>    <span class="k">def</span> <span class="nf">createNodeVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asBVec</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.createNodeVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createNodeVec">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">createNodeVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asBVec</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new tacs distributed node vector.</span>
 <span class="sd">        Values are initialized to zero.</span>
 
@@ -1111,8 +1264,6 @@
 <span class="sd">        xpts : numpy.ndarray or TACS.Vec</span>
 <span class="sd">            Distributed node coordinate vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
 
         <span class="n">xptVec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createNodeVec</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">asBVec</span><span class="p">:</span>
@@ -1120,33 +1271,30 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">xptVec</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.getNumOwnedNodes"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getNumOwnedNodes">[docs]</a>    <span class="k">def</span> <span class="nf">getNumOwnedNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getNumOwnedNodes"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getNumOwnedNodes">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getNumOwnedNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of nodes owned by this processor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">getNumOwnedNodes</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.getNumOwnedMultiplierNodes"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getNumOwnedMultiplierNodes">[docs]</a>    <span class="k">def</span> <span class="nf">getNumOwnedMultiplierNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getNumOwnedMultiplierNodes"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getNumOwnedMultiplierNodes">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getNumOwnedMultiplierNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get number of multiplier nodes owned by this processor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="o">.</span><span class="n">getLocalMultiplierNodeIDs</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="pyTACS.getLocalMultiplierNodeIDs"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getLocalMultiplierNodeIDs">[docs]</a>    <span class="k">def</span> <span class="nf">getLocalMultiplierNodeIDs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getLocalMultiplierNodeIDs"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getLocalMultiplierNodeIDs">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getLocalMultiplierNodeIDs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the tacs indices of multiplier nodes used to hold lagrange multipliers on this processor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="o">.</span><span class="n">getLocalMultiplierNodeIDs</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.createVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createVec">[docs]</a>    <span class="k">def</span> <span class="nf">createVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asBVec</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.createVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createVec">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">createVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asBVec</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new tacs distributed state variable vector.</span>
 <span class="sd">        Values are initialized to zero.</span>
 
@@ -1162,34 +1310,24 @@
 <span class="sd">        vars : numpy.ndarray or TACS.Vec</span>
 <span class="sd">            Distributed state variable vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="nb">vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createVec</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">asBVec</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">vars</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">vars</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.getVarsPerNode"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getVarsPerNode">[docs]</a>    <span class="k">def</span> <span class="nf">getVarsPerNode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.getVarsPerNode"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getVarsPerNode">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">getVarsPerNode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of variables per node for the model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">getVarsPerNode</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.applyBCsToVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.applyBCsToVec">[docs]</a>    <span class="k">def</span> <span class="nf">applyBCsToVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.applyBCsToVec"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.applyBCsToVec">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">applyBCsToVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Applies zeros to boundary condition dofs in input vector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
-        <span class="n">varVec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createVec</span><span class="p">()</span>
-        <span class="n">varArray</span> <span class="o">=</span> <span class="n">varVec</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span>
-
         <span class="c1"># Check if input is a BVec or numpy array</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">tacs</span><span class="o">.</span><span class="n">TACS</span><span class="o">.</span><span class="n">Vec</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">applyBCs</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
@@ -1204,8 +1342,9 @@
             <span class="c1"># Copy values back to array</span>
             <span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="pyTACS.createStaticProblem"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createStaticProblem">[docs]</a>    <span class="k">def</span> <span class="nf">createStaticProblem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.createStaticProblem"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createStaticProblem">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">createStaticProblem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new staticProblem for modeling a static load cases.</span>
 <span class="sd">        This object can be used to set loads, evalFunctions as well as perform</span>
 <span class="sd">        solutions and sensitivities related to static problems</span>
@@ -1222,9 +1361,6 @@
 <span class="sd">        problem : StaticProblem</span>
 <span class="sd">            StaticProblem object used for modeling and solving static cases.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="n">problem</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">problems</span><span class="o">.</span><span class="n">static</span><span class="o">.</span><span class="n">StaticProblem</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputViewer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="p">,</span> <span class="n">options</span>
         <span class="p">)</span>
@@ -1233,8 +1369,9 @@
         <span class="n">problem</span><span class="o">.</span><span class="n">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xpts0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">problem</span></div>
 
-<div class="viewcode-block" id="pyTACS.createTransientProblem"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createTransientProblem">[docs]</a>    <span class="k">def</span> <span class="nf">createTransientProblem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tInit</span><span class="p">,</span> <span class="n">tFinal</span><span class="p">,</span> <span class="n">numSteps</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.createTransientProblem"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createTransientProblem">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">createTransientProblem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tInit</span><span class="p">,</span> <span class="n">tFinal</span><span class="p">,</span> <span class="n">numSteps</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new TransientProblem for modeling a transient load cases.</span>
 <span class="sd">        This object can be used to set loads, evalFunctions as well as perform</span>
 <span class="sd">        solutions and sensitivities related to transient problems</span>
@@ -1257,9 +1394,6 @@
 <span class="sd">        problem : TransientProblem</span>
 <span class="sd">            TransientProblem object used for modeling and solving transient cases.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="n">problem</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">problems</span><span class="o">.</span><span class="n">transient</span><span class="o">.</span><span class="n">TransientProblem</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">tInit</span><span class="p">,</span>
@@ -1276,8 +1410,9 @@
         <span class="n">problem</span><span class="o">.</span><span class="n">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xpts0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">problem</span></div>
 
-<div class="viewcode-block" id="pyTACS.createModalProblem"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createModalProblem">[docs]</a>    <span class="k">def</span> <span class="nf">createModalProblem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">numEigs</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.createModalProblem"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createModalProblem">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">createModalProblem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">numEigs</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new ModalProblem for performing modal analysis.</span>
 <span class="sd">        This problem can be used to identify the natural frequencies and mode</span>
 <span class="sd">        shapes of the model through eigenvalue analysis.</span>
@@ -1299,9 +1434,6 @@
 <span class="sd">        problem : ModalProblem</span>
 <span class="sd">            ModalProblem object used for performing modal eigenvalue analysis.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="n">problem</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">problems</span><span class="o">.</span><span class="n">modal</span><span class="o">.</span><span class="n">ModalProblem</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">sigma</span><span class="p">,</span>
@@ -1317,8 +1449,9 @@
         <span class="n">problem</span><span class="o">.</span><span class="n">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xpts0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">problem</span></div>
 
-<div class="viewcode-block" id="pyTACS.createTACSProbsFromBDF"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createTACSProbsFromBDF">[docs]</a>    <span class="k">def</span> <span class="nf">createTACSProbsFromBDF</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pyTACS.createTACSProbsFromBDF"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createTACSProbsFromBDF">[docs]</a>    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span> <span class="nf">createTACSProbsFromBDF</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Automatically define tacs problem classes with loads using information contained in BDF file.</span>
 <span class="sd">        This function assumes all loads are specified in the BDF and allows users to</span>
 <span class="sd">        skip setting loads in Python.</span>
@@ -1334,10 +1467,6 @@
 <span class="sd">        Currently only supports LOAD, FORCE, MOMENT, GRAV, RFORCE, PLOAD2, PLOAD4, TLOAD1, TLOAD2, and DLOAD cards.</span>
 <span class="sd">        Currently only supports staticProblem (SOL 101), transientProblem (SOL 109), and modalProblems (SOL 103)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeError</span><span class="p">()</span>
-
         <span class="c1"># Make sure cross-referencing is turned on in pynastran</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bdfInfo</span><span class="o">.</span><span class="n">is_xrefed</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bdfInfo</span><span class="o">.</span><span class="n">cross_reference</span><span class="p">()</span>
@@ -1442,13 +1571,13 @@
         <span class="k">return</span> <span class="n">structProblems</span></div>
 
 <div class="viewcode-block" id="pyTACS.getNumComponents"><a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.getNumComponents">[docs]</a>    <span class="k">def</span> <span class="nf">getNumComponents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return number of components (property) groups found in bdf.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nComp</span></div>
 
     <span class="k">def</span> <span class="nf">_createOutputGroups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Automatically determine how to split out the output file</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Automatically determine how to split out the output file</span>
 <span class="sd">        for easier viewing&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fam</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1465,7 +1594,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">compFam</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fam</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_createOutputViewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Internal method to create the appropriate output viewer</span>
 <span class="sd">        (TACSToFH5 object) for TACS.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1485,6 +1614,8 @@
             <span class="n">write_flag</span> <span class="o">|=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">TACS</span><span class="o">.</span><span class="n">OUTPUT_STRESSES</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOption</span><span class="p">(</span><span class="s2">&quot;writeExtras&quot;</span><span class="p">):</span>
             <span class="n">write_flag</span> <span class="o">|=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">TACS</span><span class="o">.</span><span class="n">OUTPUT_EXTRAS</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOption</span><span class="p">(</span><span class="s2">&quot;writeLoads&quot;</span><span class="p">):</span>
+            <span class="n">write_flag</span> <span class="o">|=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">TACS</span><span class="o">.</span><span class="n">OUTPUT_LOADS</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOption</span><span class="p">(</span><span class="s2">&quot;writeCoordinateFrame&quot;</span><span class="p">):</span>
             <span class="n">write_flag</span> <span class="o">|=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">TACS</span><span class="o">.</span><span class="n">OUTPUT_COORDINATES</span>
 
@@ -1503,7 +1634,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">outputViewer</span><span class="o">.</span><span class="n">setComponentName</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fam</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_getCompIDs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="n">inList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Internal method to return the component IDs mathing</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal method to return the component IDs mathing</span>
 <span class="sd">        information in inList&quot;&quot;&quot;</span>
 
         <span class="c1"># First recursively flatten the inList in case it was nested:</span>
@@ -1559,7 +1690,7 @@
         <span class="k">return</span> <span class="n">compIDs</span>
 
     <span class="k">def</span> <span class="nf">_createElements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elemCallBack</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create all the constitutive objects by calling the</span>
 <span class="sd">        userSupplied or default callback function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1719,21 +1850,11 @@
         <span class="c1"># If varsPerNode still hasn&#39;t been set (because there were no elements added in the callback)</span>
         <span class="c1"># Default to 6</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">varsPerNode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">varsPerNode</span> <span class="o">=</span> <span class="mi">6</span>
-
-    <span class="k">def</span> <span class="nf">_initializeError</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Standard error print out if the user tries to call certain pytacs methods before intializing.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TACSError</span><span class="p">(</span>
-            <span class="s2">&quot;TACS assembler has not been created. &quot;</span>
-            <span class="s2">&quot;Assembler must created first by running &#39;initalize&#39; method.&quot;</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">error</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varsPerNode</span> <span class="o">=</span> <span class="mi">6</span></div>
 
 
 <span class="k">def</span> <span class="nf">_tload2_get_load_at_time</span><span class="p">(</span><span class="n">tload2</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a function for interpolating the time series for the NASTRAN TLOAD2 card.</span>
 <span class="sd">    Usually, this would be done through pyNastran, but there&#39;s bug in its implementation</span>
 <span class="sd">    that prevents it from being run.</span>
