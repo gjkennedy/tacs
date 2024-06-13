@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="python">
+<html lang="python" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Installation of ESP/CAPS &#8212; TACS  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=87629129" />
     <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=a888008e"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/documentation_options.js?v=d048f138"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Plate under static load" href="../examples/Example-Plate.html" />
@@ -45,7 +45,7 @@
           <div class="body" role="main">
             
   <section id="installation-of-esp-caps">
-<h1>Installation of ESP/CAPS<a class="headerlink" href="#installation-of-esp-caps" title="Permalink to this heading">¶</a></h1>
+<h1>Installation of ESP/CAPS<a class="headerlink" href="#installation-of-esp-caps" title="Link to this heading">¶</a></h1>
 <p>The link to the main Engineering Sketch Pad webiste is the following, <a class="reference external" href="https://acdl.mit.edu/ESP/">ESP/CAPS</a>.
 A prebuilt distribution can be found in the <code class="docutils literal notranslate"><span class="pre">PreBuilts/</span></code> folder. The following environment variables must be setup in the ~/.bashrc file.
 The serveCSM command is useful in viewing the ESP/CAPS geometry from a .csm file. The alias csm
@@ -74,7 +74,7 @@ Then, as the package is a prebuilt, we only need to make the tacsAIM directory w
 <p>The caps2tacs python module will not be imported unless ESP/CAPS is properly installed on your machine.</p>
 </section>
 <section id="intro">
-<h1>Intro<a class="headerlink" href="#intro" title="Permalink to this heading">¶</a></h1>
+<h1>Intro<a class="headerlink" href="#intro" title="Link to this heading">¶</a></h1>
 <p>The differentiable CAD geometry in ESP/CAPS is defined in a CSM or Computational Solid Model file.
 The user must write their own CSM file (see ESP/CAPS tutorials on their website) to define a structures geometry.
 Important things to include in your CSM file are included below (for reference see the file <code class="docutils literal notranslate"><span class="pre">examples/caps_wing/simple_naca_wing.csm</span></code>).</p>
@@ -163,7 +163,7 @@ Finally the routine <code class="docutils literal notranslate"><span class="pre"
 </div>
 </section>
 <section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h1>
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h1>
 <p>The main caps2tacs example is in the directory <code class="docutils literal notranslate"><span class="pre">./examples/caps_wing/</span></code>, with five analyses
 on a coarse mesh of a symmetric NACA 0012 wing structure.
 1. A steady analysis, using the EGADS AIM for meshing, with a vertical distributed load.
@@ -179,18 +179,22 @@ on a coarse mesh of a symmetric NACA 0012 wing structure.
 <p>The sizing optimization shown below resulted in about a 40% drop in weight from the equal thickness design. Notice
 the optimal design has the largest panel thicknesses near the root as this is related to a beam bending problem
 with clamped root.</p>
-<a class="reference internal image-reference" href="../_images/c2tacs1.png"><img alt="Sizing optimization history - results in about a 40\% drop in weight from the equal thickness design." src="../_images/c2tacs1.png" style="width: 400px;" /></a>
-<a class="reference internal image-reference" href="../_images/c2tacs2.png"><img alt="Optimal design from the sizing optimization." src="../_images/c2tacs2.png" style="width: 400px;" /></a>
+<a class="reference internal image-reference" href="../_images/c2tacs1.png"><img alt="Sizing optimization history - results in about a 40\% drop in weight from the equal thickness design." src="../_images/c2tacs1.png" style="width: 400px;" />
+</a>
+<a class="reference internal image-reference" href="../_images/c2tacs2.png"><img alt="Optimal design from the sizing optimization." src="../_images/c2tacs2.png" style="width: 400px;" />
+</a>
 <p>The optimization results for the sizing + shape optimization are shown below, which resulted in a 27% drop in weight
 from the optimal design of the sizing optimization. This suggests that the placement of ribs and spars is very important
 in designing a good wing structure. In this case, the spars move towards the leading edge with higher curvature.</p>
-<a class="reference internal image-reference" href="../_images/c2tacs3.png"><img alt="Sizing + Shape optimization history - results in about a 27\% drop in weight from the pure sizing optimal design." src="../_images/c2tacs3.png" style="width: 400px;" /></a>
-<a class="reference internal image-reference" href="../_images/c2tacs4.png"><img alt="Optimal design from the sizing + shape optimization, notice the optimal placement of ribs and spars to hold the vertical distributed loads." src="../_images/c2tacs4.png" style="width: 400px;" /></a>
+<a class="reference internal image-reference" href="../_images/c2tacs3.png"><img alt="Sizing + Shape optimization history - results in about a 27\% drop in weight from the pure sizing optimal design." src="../_images/c2tacs3.png" style="width: 400px;" />
+</a>
+<a class="reference internal image-reference" href="../_images/c2tacs4.png"><img alt="Optimal design from the sizing + shape optimization, notice the optimal placement of ribs and spars to hold the vertical distributed loads." src="../_images/c2tacs4.png" style="width: 400px;" />
+</a>
 <p>For more examples using caps2tacs for thermoelastic analysis and involving CFD, please see the
 <a class="reference external" href="https://github.com/smdogroup/funtofem/">FUNtoFEM github</a>.</p>
 </section>
 <section id="testing">
-<h1>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h1>
+<h1>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h1>
 <p>Two different unittests can be used to verify your build of ESP/CAPS and TACS is working correctly. The unittests
 are located at <code class="docutils literal notranslate"><span class="pre">tests/integration_tests/test_caps_shape_derivatives.py</span></code> and <code class="docutils literal notranslate"><span class="pre">tests/integration_tests/test_caps_thick_derivatives.py</span></code>.</p>
 </section>
@@ -222,7 +226,7 @@ are located at <code class="docutils literal notranslate"><span class="pre">test
     <p class="topless"><a href="../examples/Example-Plate.html"
                           title="next chapter">Plate under static load</a></p>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -230,7 +234,7 @@ are located at <code class="docutils literal notranslate"><span class="pre">test
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
