@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>pyTACS class &#8212; TACS  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=87629129" />
     <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <script src="../_static/documentation_options.js?v=d048f138"></script>
@@ -657,7 +657,7 @@ properties provided in the BDF file.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>elemCallBack</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.13)"><em>collections.abc.Callable</em></a><em> or </em><em>None</em>) -- <p>The calling sequence for elemCallBack <strong>must</strong> be as
 follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">elemCallBack</span><span class="p">(</span><span class="n">dvNum</span><span class="p">,</span> <span class="n">compID</span><span class="p">,</span> <span class="n">compDescript</span><span class="p">,</span> <span class="n">elemDescripts</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">elemCallBack</span><span class="p">(</span><span class="n">dvNum</span><span class="p">,</span> <span class="n">compID</span><span class="p">,</span> <span class="n">compDescript</span><span class="p">,</span> <span class="n">elemDescripts</span><span class="p">,</span>
                 <span class="n">globalDVs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </pre></div>
 </div>
@@ -692,7 +692,7 @@ during assembler creation.</p>
 <dd class="field-odd"><p><strong>x</strong> -- The original design variable vector set in tacs.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)">numpy.ndarray</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -727,7 +727,7 @@ Defaults to False.</p>
 <dd class="field-even"><p><strong>x</strong> -- Distributed design variable vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)">numpy.ndarray</a> or tacs.TACS.Vec</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a> or tacs.TACS.Vec</p>
 </dd>
 </dl>
 </dd></dl>
@@ -770,7 +770,7 @@ Defaults to False.</p>
 the number of structural nodes on this processor.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)">numpy.ndarray</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -790,7 +790,7 @@ Defaults to False.</p>
 <dd class="field-even"><p><strong>xpts</strong> -- Distributed node coordinate vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)">numpy.ndarray</a> or tacs.TACS.Vec</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a> or tacs.TACS.Vec</p>
 </dd>
 </dl>
 </dd></dl>
@@ -852,7 +852,7 @@ Defaults to False.</p>
 <dd class="field-even"><p><strong>vars</strong> -- Distributed state variable vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)">numpy.ndarray</a> or tacs.TACS.Vec</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)">numpy.ndarray</a> or tacs.TACS.Vec</p>
 </dd>
 </dl>
 </dd></dl>
@@ -877,7 +877,7 @@ Defaults to False.</p>
 <dd><p>Applies zeros to boundary condition DOFs in input vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to apply boundary conditions to.</p>
+<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to apply boundary conditions to.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -888,7 +888,7 @@ Defaults to False.</p>
 <dd><p>Sets dirichlet boundary condition values in the input vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to set boundary conditions in.</p>
+<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to set boundary conditions in.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1107,6 +1107,27 @@ length DV values passed to components match the actual panel lengths.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="tacs.pytacs.pyTACS.createPanelWidthConstraint">
+<span class="sig-name descname"><span class="pre">createPanelWidthConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/pytacs.html#pyTACS.createPanelWidthConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.pytacs.pyTACS.createPanelWidthConstraint" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new PanelWidthConstraint for enforcing that the panel
+width DV values passed to components match the actual panel widths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name to assign constraint.</p></li>
+<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Class-specific options to pass to DVConstraint instance (case-insensitive).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>constraint</strong> -- PanelWidthConstraint object used for calculating constraints.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tacs.constraints.{PanelWidthConstraint}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="tacs.pytacs.pyTACS.createVolumeConstraint">
 <span class="sig-name descname"><span class="pre">createVolumeConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/pytacs.html#pyTACS.createVolumeConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.pytacs.pyTACS.createVolumeConstraint" title="Link to this definition">¶</a></dt>
 <dd><p>Create a new VolumeConstraint for constraining the size of a closed volume.
@@ -1282,6 +1303,7 @@ options to the stdout on the root processor</p>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createAdjacencyConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createAdjacencyConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createDVConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createDVConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createPanelLengthConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createPanelLengthConstraint()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.pytacs.pyTACS.createPanelWidthConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createPanelWidthConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createVolumeConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createVolumeConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.getNumComponents"><code class="docutils literal notranslate"><span class="pre">pyTACS.getNumComponents()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.dtype"><code class="docutils literal notranslate"><span class="pre">pyTACS.dtype</span></code></a></li>
