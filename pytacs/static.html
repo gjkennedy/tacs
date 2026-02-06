@@ -63,7 +63,8 @@ other pieces of information.</p>
 <a class="reference internal" href="#tacs.problems.StaticProblem.setOption" title="tacs.problems.StaticProblem.setOption"><code class="xref py py-meth docutils literal notranslate"><span class="pre">StaticProblem.setOption</span></code></a> method. Current option values for a class
 instance can be printed out using the <a class="reference internal" href="#tacs.problems.StaticProblem.printOptions" title="tacs.problems.StaticProblem.printOptions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">StaticProblem.printOption</span></code></a> method.
 The following options, their default values and descriptions are listed below:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+----------------------------------------+
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
++----------------------------------------+
 |     StaticProblem default options:     |
 +----------------------------------------+
 &#39;outputDir&#39;: &#39;./&#39;
@@ -230,7 +231,7 @@ from the functions module in tacs.</p></li>
 <dd><p>Update the design variables used by tacs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- The variables (typically from the optimizer) to set. It
+<dd class="field-odd"><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- The variables (typically from the optimizer) to set. It
 looks for variable in the <code class="docutils literal notranslate"><span class="pre">self.varName</span></code> attribute.</p>
 </dd>
 </dl>
@@ -242,7 +243,7 @@ looks for variable in the <code class="docutils literal notranslate"><span class
 <dd><p>Set the mesh coordinates of the structure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Xpts</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Structural coordinate in array of size (N * 3) where N is
+<dd class="field-odd"><p><strong>Xpts</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Structural coordinate in array of size (N * 3) where N is
 the number of structural nodes on this processor.</p>
 </dd>
 </dl>
@@ -347,7 +348,7 @@ right hand side vector given the equation below:</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Fapplied</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Distributed array containing loads to applied to RHS of the problem.</p>
+<dd class="field-odd"><p><strong>Fapplied</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Distributed array containing loads to applied to RHS of the problem.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -441,7 +442,7 @@ a uniform acceleration over the entire model.
 This is most commonly used to model gravity loads on a model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inertiaVector</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Acceleration vector used to define inertial load.</p>
+<dd class="field-odd"><p><strong>inertiaVector</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Acceleration vector used to define inertial load.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -455,8 +456,8 @@ This is most commonly used to model rotors, rolling aircraft, etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>omegaVector</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Rotational velocity vector (rad/s) used to define centrifugal load.</p></li>
-<li><p><strong>rotCenter</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Location of center of rotation used to define centrifugal load.</p></li>
+<li><p><strong>omegaVector</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Rotational velocity vector (rad/s) used to define centrifugal load.</p></li>
+<li><p><strong>rotCenter</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Location of center of rotation used to define centrifugal load.</p></li>
 <li><p><strong>firstOrder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) -- Whether to use first order approximation for centrifugal load,
 which computes the force in the displaced position. By default False</p></li>
 </ul>
@@ -486,7 +487,7 @@ Currently, only supports LOAD, FORCE, MOMENT, GRAV, RFORCE, PLOAD2, and PLOAD4.<
 forces must already be set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Fext</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em><em>, </em><em>optional</em>) -- Distributed array containing additional loads (ex. aerodynamic forces for aerostructural coupling)
+<dd class="field-odd"><p><strong>Fext</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em><em>, </em><em>optional</em>) -- Distributed array containing additional loads (ex. aerodynamic forces for aerostructural coupling)
 to applied to RHS of the static problem, by default None</p>
 </dd>
 </dl>
@@ -579,7 +580,7 @@ respect to all design variables and node locations are computed.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>evalFuncs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) -- The functions the user wants returned</p></li>
-<li><p><strong>svSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add partial sensitivity to</p></li>
+<li><p><strong>svSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add partial sensitivity to</p></li>
 </ul>
 </dd>
 </dl>
@@ -593,7 +594,7 @@ respect to all design variables and node locations are computed.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>evalFuncs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) -- The functions the user wants returned</p></li>
-<li><p><strong>dvSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add partial sensitivity to</p></li>
+<li><p><strong>dvSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add partial sensitivity to</p></li>
 <li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) -- Scalar to multiply partial sensitivity by. Defaults to 1.0</p></li>
 </ul>
 </dd>
@@ -607,8 +608,8 @@ respect to all design variables and node locations are computed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adjointlist</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>]</em>) -- List of adjoint vectors for residual sensitivity product</p></li>
-<li><p><strong>dvSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add product to</p></li>
+<li><p><strong>adjointlist</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>]</em>) -- List of adjoint vectors for residual sensitivity product</p></li>
+<li><p><strong>dvSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add product to</p></li>
 <li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) -- Scalar to multiply product by. Defaults to -1.0</p></li>
 </ul>
 </dd>
@@ -623,7 +624,7 @@ respect to all design variables and node locations are computed.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>evalFuncs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) -- The functions the user wants returned</p></li>
-<li><p><strong>xptSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add partial sensitivity to</p></li>
+<li><p><strong>xptSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add partial sensitivity to</p></li>
 <li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) -- Scalar to multiply partial sensitivity by. Defaults to 1.0</p></li>
 </ul>
 </dd>
@@ -637,8 +638,8 @@ respect to all design variables and node locations are computed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adjointlist</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>]</em>) -- List of adjoint vectors for residual sensitivity product</p></li>
-<li><p><strong>xptSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add product to</p></li>
+<li><p><strong>adjointlist</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>]</em>) -- List of adjoint vectors for residual sensitivity product</p></li>
+<li><p><strong>xptSensList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>tacs.TACS.Vec</em><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>]</em>) -- List of sensitivity vectors to add product to</p></li>
 <li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) -- Scalar to multiply product by. Defaults to -1.0</p></li>
 </ul>
 </dd>
@@ -653,8 +654,8 @@ residual. Only typically used with aerostructural analysis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>res</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- If res is not None, place the residuals into this array.</p></li>
-<li><p><strong>Fext</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) -- Distributed array containing additional loads (ex. aerodynamic forces for aerostructural coupling)
+<li><p><strong>res</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- If res is not None, place the residuals into this array.</p></li>
+<li><p><strong>Fext</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) -- Distributed array containing additional loads (ex. aerodynamic forces for aerostructural coupling)
 to applied to RHS of the static problem.</p></li>
 </ul>
 </dd>
@@ -695,7 +696,24 @@ to applied to RHS of the static problem.</p></li>
 scipy.sparse.bsr_matrices (A, B, C, D) if Jacobian is a TACSSchurMat</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>(<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.16.2)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.16.2)">scipy.sparse.bsr_matrix</a>) or (<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.16.2)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.16.2)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.16.2)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.16.2)">scipy.sparse.bsr_matrix</a>)</p>
+<dd class="field-even"><p>(<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.17.0)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.17.0)">scipy.sparse.bsr_matrix</a>) or (<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.17.0)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.17.0)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.17.0)">scipy.sparse.bsr_matrix</a>, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="(in SciPy v1.17.0)">scipy.sparse.bsr_matrix</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tacs.problems.StaticProblem.addJacVecProduct">
+<span class="sig-name descname"><span class="pre">addJacVecProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prod</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/static.html#StaticProblem.addJacVecProduct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.StaticProblem.addJacVecProduct" title="Link to this definition">¶</a></dt>
+<dd><p>Adds product of Jacobian (or its transpose) and input vector into output vector as shown below:
+prod += scale * J(^T) . phi</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phi</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Input vector to product with the transpose Jacobian.</p></li>
+<li><p><strong>prod</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Output vector to add Jacobian product to.</p></li>
+<li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) -- Scalar used to scale Jacobian product by.</p></li>
+<li><p><strong>transpose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) -- Flag to indicate whether to use the transpose Jacobian.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -703,13 +721,13 @@ scipy.sparse.bsr_matrices (A, B, C, D) if Jacobian is a TACSSchurMat</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="tacs.problems.StaticProblem.addTransposeJacVecProduct">
 <span class="sig-name descname"><span class="pre">addTransposeJacVecProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prod</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/static.html#StaticProblem.addTransposeJacVecProduct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.StaticProblem.addTransposeJacVecProduct" title="Link to this definition">¶</a></dt>
-<dd><p>Adds product of transpose Jacobian and input vector into output vector as shown below:
-prod += scale * J^T . phi</p>
+<dd><p>Adds product of Jacobian transpose and input vector into output vector as shown below:
+prod += scale * J(^T) . phi</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phi</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Input vector to product with the transpose Jacobian.</p></li>
-<li><p><strong>prod</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Output vector to add Jacobian product to.</p></li>
+<li><p><strong>phi</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Input vector to product with the transpose Jacobian.</p></li>
+<li><p><strong>prod</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Output vector to add Jacobian product to.</p></li>
 <li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) -- Scalar used to scale Jacobian product by.</p></li>
 </ul>
 </dd>
@@ -729,14 +747,29 @@ prod += scale * J^T . phi</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="tacs.problems.StaticProblem.solveForward">
+<span class="sig-name descname"><span class="pre">solveForward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/static.html#StaticProblem.solveForward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.StaticProblem.solveForward" title="Link to this definition">¶</a></dt>
+<dd><p>Solve a linear system using the structural Jacobian.</p>
+<p>Computes psi by solving J * psi = rhs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rhs</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- right hand side vector for solve</p></li>
+<li><p><strong>psi</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- BVec or numpy array into which the solution is saved, also treated as the initial guess for the solution</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="tacs.problems.StaticProblem.solveAdjoint">
 <span class="sig-name descname"><span class="pre">solveAdjoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/problems/static.html#StaticProblem.solveAdjoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.problems.StaticProblem.solveAdjoint" title="Link to this definition">¶</a></dt>
 <dd><p>Solve the structural adjoint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rhs</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- right hand side vector for adjoint solve</p></li>
-<li><p><strong>phi</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- BVec or numpy array into which the adjoint is saved</p></li>
+<li><p><strong>rhs</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- right hand side vector for adjoint solve</p></li>
+<li><p><strong>phi</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- BVec or numpy array into which the adjoint is saved</p></li>
 </ul>
 </dd>
 </dl>
@@ -749,13 +782,13 @@ prod += scale * J^T . phi</p>
 problem</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>states</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Vector to place current state variables into (optional)</p>
+<dd class="field-odd"><p><strong>states</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Vector to place current state variables into (optional)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>states</strong> -- current state vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -766,7 +799,7 @@ problem</p>
 <dd><p>Set the structural states for current load case.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>states</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Values to set. Must be the size of getNumVariables()</p>
+<dd class="field-odd"><p><strong>states</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Values to set. Must be the size of getNumVariables()</p>
 </dd>
 </dl>
 </dd></dl>
@@ -814,6 +847,34 @@ typically used from an external solver</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="tacs.problems.StaticProblem.copyFromTACSVec">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copyFromTACSVec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tacs.problems.StaticProblem.copyFromTACSVec" title="Link to this definition">¶</a></dt>
+<dd><p>Copy values from a TACS Vec into either a TACS Vec or numpy array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<em>tacs.TACS.Vec</em>) -- Vector to copy values from</p></li>
+<li><p><strong>dest</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Vector/array to copy values into</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tacs.problems.StaticProblem.copyToTACSVec">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copyToTACSVec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tacs.problems.StaticProblem.copyToTACSVec" title="Link to this definition">¶</a></dt>
+<dd><p>Copy values into a TACS Vec from either a TACS Vec or numpy array or scalar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em> or </em><em>scalar</em>) -- Vector/array to copy values from</p></li>
+<li><p><strong>dest</strong> (<em>tacs.TACS.Vec</em>) -- Vector to copy into</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="tacs.problems.StaticProblem.dtype">
 <span class="sig-name descname"><span class="pre">dtype</span></span><a class="headerlink" href="#tacs.problems.StaticProblem.dtype" title="Link to this definition">¶</a></dt>
@@ -844,7 +905,7 @@ typically used from an external solver</p></li>
 <dd class="field-odd"><p><strong>x</strong> -- The current design variable vector set in tacs.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -873,7 +934,7 @@ typically used from an external solver</p></li>
 the number of structural nodes on this processor.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1111,14 +1172,18 @@ can be None otherwise.</p></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.getResidual"><code class="docutils literal notranslate"><span class="pre">StaticProblem.getResidual()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.getForces"><code class="docutils literal notranslate"><span class="pre">StaticProblem.getForces()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.getJacobian"><code class="docutils literal notranslate"><span class="pre">StaticProblem.getJacobian()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.problems.StaticProblem.addJacVecProduct"><code class="docutils literal notranslate"><span class="pre">StaticProblem.addJacVecProduct()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.addTransposeJacVecProduct"><code class="docutils literal notranslate"><span class="pre">StaticProblem.addTransposeJacVecProduct()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.zeroVariables"><code class="docutils literal notranslate"><span class="pre">StaticProblem.zeroVariables()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.zeroLoads"><code class="docutils literal notranslate"><span class="pre">StaticProblem.zeroLoads()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.problems.StaticProblem.solveForward"><code class="docutils literal notranslate"><span class="pre">StaticProblem.solveForward()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.solveAdjoint"><code class="docutils literal notranslate"><span class="pre">StaticProblem.solveAdjoint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.getVariables"><code class="docutils literal notranslate"><span class="pre">StaticProblem.getVariables()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.setVariables"><code class="docutils literal notranslate"><span class="pre">StaticProblem.setVariables()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.getOutputFileName"><code class="docutils literal notranslate"><span class="pre">StaticProblem.getOutputFileName()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.writeSolution"><code class="docutils literal notranslate"><span class="pre">StaticProblem.writeSolution()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.problems.StaticProblem.copyFromTACSVec"><code class="docutils literal notranslate"><span class="pre">StaticProblem.copyFromTACSVec()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.problems.StaticProblem.copyToTACSVec"><code class="docutils literal notranslate"><span class="pre">StaticProblem.copyToTACSVec()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.dtype"><code class="docutils literal notranslate"><span class="pre">StaticProblem.dtype</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.getDesignVarRange"><code class="docutils literal notranslate"><span class="pre">StaticProblem.getDesignVarRange()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.problems.StaticProblem.getDesignVars"><code class="docutils literal notranslate"><span class="pre">StaticProblem.getDesignVars()</span></code></a></li>

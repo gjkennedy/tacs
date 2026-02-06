@@ -78,7 +78,8 @@ for setting loads and functions, performing analysis, and gradient computations.
 <a class="reference internal" href="#tacs.pytacs.pyTACS.setOption" title="tacs.pytacs.pyTACS.setOption"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pyTACS.setOption</span></code></a>. Current option values for a class
 instance can be printed out using the <a class="reference internal" href="#tacs.pytacs.pyTACS.printOptions" title="tacs.pytacs.pyTACS.printOptions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pyTACS.printOption</span></code></a> method.
 The following options, their default values and descriptions are listed below:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+----------------------------------------+
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
++----------------------------------------+
 |        pyTACS default options:         |
 +----------------------------------------+
 &#39;printDebug&#39;: False
@@ -693,7 +694,7 @@ during assembler creation.</p>
 <dd class="field-odd"><p><strong>x</strong> -- The original design variable vector set in tacs.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -728,7 +729,7 @@ Defaults to False.</p>
 <dd class="field-even"><p><strong>x</strong> -- Distributed design variable vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> or tacs.TACS.Vec</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a> or tacs.TACS.Vec</p>
 </dd>
 </dl>
 </dd></dl>
@@ -771,7 +772,7 @@ Defaults to False.</p>
 the number of structural nodes on this processor.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -791,7 +792,7 @@ Defaults to False.</p>
 <dd class="field-even"><p><strong>xpts</strong> -- Distributed node coordinate vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> or tacs.TACS.Vec</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a> or tacs.TACS.Vec</p>
 </dd>
 </dl>
 </dd></dl>
@@ -853,7 +854,7 @@ Defaults to False.</p>
 <dd class="field-even"><p><strong>vars</strong> -- Distributed state variable vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> or tacs.TACS.Vec</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a> or tacs.TACS.Vec</p>
 </dd>
 </dl>
 </dd></dl>
@@ -878,7 +879,7 @@ Defaults to False.</p>
 <dd><p>Applies zeros to boundary condition DOFs in input vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to apply boundary conditions to.</p>
+<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to apply boundary conditions to.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -889,7 +890,7 @@ Defaults to False.</p>
 <dd><p>Sets dirichlet boundary condition values in the input vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to set boundary conditions in.</p>
+<dd class="field-odd"><p><strong>vec</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em> or </em><em>tacs.TACS.Vec</em>) -- Vector to set boundary conditions in.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1095,7 +1096,7 @@ length DV values passed to components match the actual panel lengths.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) -- Name to assign constraint.</p></li>
-<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) -- Class-specific options to pass to DVConstraint instance (case-insensitive).</p></li>
+<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) -- Class-specific options to pass to PanelLengthConstraint instance (case-insensitive).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1116,7 +1117,7 @@ width DV values passed to components match the actual panel widths.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) -- Name to assign constraint.</p></li>
-<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) -- Class-specific options to pass to DVConstraint instance (case-insensitive).</p></li>
+<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) -- Class-specific options to pass to PanelWidthConstraint instance (case-insensitive).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1124,6 +1125,27 @@ width DV values passed to components match the actual panel widths.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tacs.constraints.{PanelWidthConstraint}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tacs.pytacs.pyTACS.createStiffenerLengthConstraint">
+<span class="sig-name descname"><span class="pre">createStiffenerLengthConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/pytacs.html#pyTACS.createStiffenerLengthConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.pytacs.pyTACS.createStiffenerLengthConstraint" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new StiffenerLengthConstraint for enforcing that the stiffener
+length DV values passed to components match the actual stiffener lengths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) -- Name to assign constraint.</p></li>
+<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) -- Class-specific options to pass to StiffenerLengthConstraint instance (case-insensitive).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>constraint</strong> -- StiffenerLengthConstraint object used for calculating constraints.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="stiffener_length.html#tacs.constraints.StiffenerLengthConstraint" title="tacs.constraints.StiffenerLengthConstraint">tacs.constraints.StiffenerLengthConstraint</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1166,6 +1188,34 @@ Defaults to None.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tacs.pytacs.pyTACS.copyFromTACSVec">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copyFromTACSVec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tacs.pytacs.pyTACS.copyFromTACSVec" title="Link to this definition">¶</a></dt>
+<dd><p>Copy values from a TACS Vec into either a TACS Vec or numpy array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<em>tacs.TACS.Vec</em>) -- Vector to copy values from</p></li>
+<li><p><strong>dest</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) -- Vector/array to copy values into</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tacs.pytacs.pyTACS.copyToTACSVec">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copyToTACSVec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tacs.pytacs.pyTACS.copyToTACSVec" title="Link to this definition">¶</a></dt>
+<dd><p>Copy values into a TACS Vec from either a TACS Vec or numpy array or scalar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<em>tacs.TACS.Vec</em><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a><em> or </em><em>scalar</em>) -- Vector/array to copy values from</p></li>
+<li><p><strong>dest</strong> (<em>tacs.TACS.Vec</em>) -- Vector to copy into</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -1305,8 +1355,11 @@ options to the stdout on the root processor</p>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createDVConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createDVConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createPanelLengthConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createPanelLengthConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createPanelWidthConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createPanelWidthConstraint()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.pytacs.pyTACS.createStiffenerLengthConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createStiffenerLengthConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.createVolumeConstraint"><code class="docutils literal notranslate"><span class="pre">pyTACS.createVolumeConstraint()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.getNumComponents"><code class="docutils literal notranslate"><span class="pre">pyTACS.getNumComponents()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.pytacs.pyTACS.copyFromTACSVec"><code class="docutils literal notranslate"><span class="pre">pyTACS.copyFromTACSVec()</span></code></a></li>
+<li><a class="reference internal" href="#tacs.pytacs.pyTACS.copyToTACSVec"><code class="docutils literal notranslate"><span class="pre">pyTACS.copyToTACSVec()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.dtype"><code class="docutils literal notranslate"><span class="pre">pyTACS.dtype</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.getOption"><code class="docutils literal notranslate"><span class="pre">pyTACS.getOption()</span></code></a></li>
 <li><a class="reference internal" href="#tacs.pytacs.pyTACS.printDefaultOptions"><code class="docutils literal notranslate"><span class="pre">pyTACS.printDefaultOptions()</span></code></a></li>

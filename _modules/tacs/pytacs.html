@@ -913,7 +913,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xlb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createDesignVec</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">getDesignVarRange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xlb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xub</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_isNonlinear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_checkNonlinearity</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_isNonlinear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_checkNonlinearity</span><span class="p">()</span>
+
+        <span class="c1"># Vector used to store temporarily store state variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tempVec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createVec</span><span class="p">()</span></div>
 
 
     <span class="nd">@postinitialize_method</span>
@@ -1136,6 +1139,16 @@
                     <span class="n">minThickness</span> <span class="o">=</span> <span class="mf">0.0</span>
                     <span class="n">maxThickness</span> <span class="o">=</span> <span class="mf">1e20</span>
 
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="n">propInfo</span><span class="o">.</span><span class="n">mid2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="p">(</span><span class="n">propInfo</span><span class="o">.</span><span class="n">mid3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="p">(</span><span class="n">propInfo</span><span class="o">.</span><span class="n">mid4</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_TACSWarning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;PSHELL property </span><span class="si">{</span><span class="n">propertyID</span><span class="si">}</span><span class="s2"> has defined multiple material IDs (MID2, MID3, or MID4). &quot;</span>
+                        <span class="s2">&quot;Only the first material (MID1) will be used.&quot;</span>
+                    <span class="p">)</span>
+
                 <span class="n">con</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">constitutive</span><span class="o">.</span><span class="n">IsoShellConstitutive</span><span class="p">(</span>
                     <span class="n">mat</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">thickness</span><span class="p">,</span> <span class="n">tlb</span><span class="o">=</span><span class="n">minThickness</span><span class="p">,</span> <span class="n">tub</span><span class="o">=</span><span class="n">maxThickness</span><span class="p">,</span> <span class="n">tNum</span><span class="o">=</span><span class="n">tNum</span>
                 <span class="p">)</span>
@@ -1243,7 +1256,17 @@
                 <span class="k">if</span> <span class="n">propInfo</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;BAR&quot;</span><span class="p">:</span>
                     <span class="n">w</span> <span class="o">=</span> <span class="n">propInfo</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">t</span> <span class="o">=</span> <span class="n">propInfo</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="n">con</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">constitutive</span><span class="o">.</span><span class="n">IsoRectangleBeamConstitutive</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+                    <span class="n">elem0</span> <span class="o">=</span> <span class="n">elemDict</span><span class="p">[</span><span class="n">propertyID</span><span class="p">][</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># Get element axes and offset vectors</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">jhat</span><span class="p">,</span> <span class="n">khat</span><span class="p">,</span> <span class="n">wa</span><span class="p">,</span> <span class="n">wb</span><span class="p">)</span> <span class="o">=</span> <span class="n">elem0</span><span class="o">.</span><span class="n">get_axes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bdfInfo</span><span class="p">)</span>
+                    <span class="c1"># Take the average of the offset vectors at either end of bar</span>
+                    <span class="n">offset_vector</span> <span class="o">=</span> <span class="p">(</span><span class="n">wa</span> <span class="o">+</span> <span class="n">wb</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+                    <span class="c1"># Project the offset vector onto the width and thickness axes</span>
+                    <span class="n">wOffset</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">khat</span><span class="p">,</span> <span class="n">offset_vector</span><span class="p">)</span> <span class="o">/</span> <span class="n">w</span>
+                    <span class="n">tOffset</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">jhat</span><span class="p">,</span> <span class="n">offset_vector</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span>
+                    <span class="n">con</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">constitutive</span><span class="o">.</span><span class="n">IsoRectangleBeamConstitutive</span><span class="p">(</span>
+                        <span class="n">mat</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">tOffset</span><span class="o">=</span><span class="n">tOffset</span><span class="p">,</span> <span class="n">wOffset</span><span class="o">=</span><span class="n">wOffset</span>
+                    <span class="p">)</span>
 
                 <span class="k">elif</span> <span class="n">propInfo</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;TUBE&quot;</span><span class="p">:</span>
                     <span class="n">r1</span> <span class="o">=</span> <span class="n">propInfo</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1284,16 +1307,10 @@
             <span class="c1"># Set up transform object which may be required for certain elements</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">propInfo</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;PSHELL&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOMP&quot;</span><span class="p">]:</span>
-                <span class="n">mcid</span> <span class="o">=</span> <span class="n">elemDict</span><span class="p">[</span><span class="n">propertyID</span><span class="p">][</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">theta_mcid_ref</span>
-                <span class="k">if</span> <span class="n">mcid</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">mcid</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CORD2R&quot;</span><span class="p">:</span>
-                        <span class="n">refAxis</span> <span class="o">=</span> <span class="n">mcid</span><span class="o">.</span><span class="n">i</span>
-                        <span class="n">transform</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">ShellRefAxisTransform</span><span class="p">(</span><span class="n">refAxis</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Don&#39;t support spherical/cylindrical yet</span>
-                        <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TACSError</span><span class="p">(</span>
-                            <span class="s2">&quot;Unsupported material coordinate system type &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">mcid</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39; for property number </span><span class="si">{</span><span class="n">propertyID</span><span class="si">}</span><span class="s2">.&quot;</span>
-                        <span class="p">)</span>
+                <span class="n">elem0</span> <span class="o">=</span> <span class="n">elemDict</span><span class="p">[</span><span class="n">propertyID</span><span class="p">][</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">elem0</span><span class="o">.</span><span class="n">theta_mcid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">refAxis</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">elem0</span><span class="o">.</span><span class="n">material_coordinate_system</span><span class="p">()</span>
+                    <span class="n">transform</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">ShellRefAxisTransform</span><span class="p">(</span><span class="n">refAxis</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">propInfo</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;PBAR&quot;</span><span class="p">,</span> <span class="s2">&quot;PBARL&quot;</span><span class="p">]:</span>
                 <span class="n">refAxis</span> <span class="o">=</span> <span class="n">elemDict</span><span class="p">[</span><span class="n">propertyID</span><span class="p">][</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">g0_vector</span>
                 <span class="n">transform</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">BeamRefAxisTransform</span><span class="p">(</span><span class="n">refAxis</span><span class="p">)</span>
@@ -1607,9 +1624,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">applyBCs</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">array</span> <span class="o">=</span> <span class="n">vec</span>
-            <span class="c1"># Create temporary BVec</span>
-            <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createVec</span><span class="p">()</span>
             <span class="c1"># Copy array values to BVec</span>
+            <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempVec</span>
             <span class="n">vec</span><span class="o">.</span><span class="n">getArray</span><span class="p">()[:]</span> <span class="o">=</span> <span class="n">array</span>
             <span class="c1"># Apply BCs</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">applyBCs</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
@@ -1634,9 +1650,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">setBCs</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">array</span> <span class="o">=</span> <span class="n">vec</span>
-            <span class="c1"># Create temporary BVec</span>
-            <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">createVec</span><span class="p">()</span>
             <span class="c1"># Copy array values to BVec</span>
+            <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempVec</span>
             <span class="n">vec</span><span class="o">.</span><span class="n">getArray</span><span class="p">()[:]</span> <span class="o">=</span> <span class="n">array</span>
             <span class="c1"># Apply BCs</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="o">.</span><span class="n">setBCs</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
@@ -2319,7 +2334,7 @@
 <span class="sd">        name : str</span>
 <span class="sd">            Name to assign constraint.</span>
 <span class="sd">        options : dict</span>
-<span class="sd">            Class-specific options to pass to DVConstraint instance (case-insensitive).</span>
+<span class="sd">            Class-specific options to pass to PanelLengthConstraint instance (case-insensitive).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
@@ -2352,7 +2367,7 @@
 <span class="sd">        name : str</span>
 <span class="sd">            Name to assign constraint.</span>
 <span class="sd">        options : dict</span>
-<span class="sd">            Class-specific options to pass to DVConstraint instance (case-insensitive).</span>
+<span class="sd">            Class-specific options to pass to PanelWidthConstraint instance (case-insensitive).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
@@ -2360,6 +2375,39 @@
 <span class="sd">            PanelWidthConstraint object used for calculating constraints.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">constr</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">PanelWidthConstraint</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputViewer</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meshLoader</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># Set with original design vars and coordinates, in case they have changed</span>
+        <span class="n">constr</span><span class="o">.</span><span class="n">setDesignVars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">)</span>
+        <span class="n">constr</span><span class="o">.</span><span class="n">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xpts0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">constr</span></div>
+
+
+<div class="viewcode-block" id="pyTACS.createStiffenerLengthConstraint">
+<a class="viewcode-back" href="../../pytacs/pytacs_module.html#tacs.pytacs.pyTACS.createStiffenerLengthConstraint">[docs]</a>
+    <span class="nd">@postinitialize_method</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createStiffenerLengthConstraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new StiffenerLengthConstraint for enforcing that the stiffener</span>
+<span class="sd">        length DV values passed to components match the actual stiffener lengths.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Name to assign constraint.</span>
+<span class="sd">        options : dict</span>
+<span class="sd">            Class-specific options to pass to StiffenerLengthConstraint instance (case-insensitive).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        constraint : tacs.constraints.StiffenerLengthConstraint</span>
+<span class="sd">            StiffenerLengthConstraint object used for calculating constraints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constr</span> <span class="o">=</span> <span class="n">tacs</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">StiffenerLengthConstraint</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assembler</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span>
