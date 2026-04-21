@@ -111,7 +111,7 @@ this option with caution.</p></li>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">funcs</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plConstraint</span><span class="o">.</span><span class="n">evalConstraints</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="s1">&#39;LE_SPAR&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plConstraint</span><span class="o">.</span><span class="n">evalConstraints</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="s2">&quot;LE_SPAR&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">funcs</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Result will look like (if PanelLengthConstraint has name of &#39;c1&#39;):</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># {&#39;c1_LE_SPAR&#39;: array([1.325, 2.1983645, 3.1415926, ...])}</span>
@@ -121,7 +121,7 @@ this option with caution.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="tacs.constraints.StiffenerLengthConstraint.evalConstraintsSens">
-<span class="sig-name descname"><span class="pre">evalConstraintsSens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcsSens</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evalCons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/constraints/stiffener_length.html#StiffenerLengthConstraint.evalConstraintsSens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.constraints.StiffenerLengthConstraint.evalConstraintsSens" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">evalConstraintsSens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcsSens</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evalCons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeDVSens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeXptSens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tacs/constraints/stiffener_length.html#StiffenerLengthConstraint.evalConstraintsSens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tacs.constraints.StiffenerLengthConstraint.evalConstraintsSens" title="Link to this definition">¶</a></dt>
 <dd><p>This is the main routine for returning useful (sensitivity)
 information from constraint. The derivatives of the constraints
 corresponding to the strings in evalCons are evaluated and
@@ -137,12 +137,14 @@ variables/node coordinates on this proc.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>funcsSens</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) -- Dictionary into which the derivatives are saved.</p></li>
 <li><p><strong>evalCons</strong> (<em>iterable object containing strings</em>) -- The constraints the user wants returned</p></li>
+<li><p><strong>includeDVSens</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) -- Flag to include design variable sensitivities in output. Default is True.</p></li>
+<li><p><strong>includeXptSens</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) -- Flag to include node location sensitivities in output. Default is True.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">funcsSens</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">adjConstraint</span><span class="o">.</span><span class="n">evalConstraintsSens</span><span class="p">(</span><span class="n">funcsSens</span><span class="p">,</span> <span class="s1">&#39;LE_SPAR&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adjConstraint</span><span class="o">.</span><span class="n">evalConstraintsSens</span><span class="p">(</span><span class="n">funcsSens</span><span class="p">,</span> <span class="s2">&quot;LE_SPAR&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">funcsSens</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Result will look like (if AdjacencyConstraint has name of &#39;c1&#39;):</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># {&#39;c1_LE_SPAR&#39;:{&#39;struct&#39;:&lt;50x242 sparse matrix of type &#39;&lt;class &#39;numpy.float64&#39;&gt;&#39; with 100 stored elements in Compressed Sparse Row format&gt;}}</span>
